@@ -13,6 +13,7 @@
 
 const config = require("./config")
 const express = require("express")
+const bodyParser = require("body-parser")
 const app = express()
 const mongo = require("mongodb").MongoClient
 const MappingProvider = require("./lib/mapping-provider")
@@ -57,6 +58,10 @@ app.use(function (req, res, next) {
   res.setHeader("Content-Type", "application/json; charset=utf-8")
   next()
 })
+
+// Add body-parser middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 // Recursively remove all fields starting with _ from response
 function cleanJSON(json) {
@@ -182,6 +187,24 @@ app.get("/mappings", (req, res) => {
           mapping["@context"] = "https://gbv.github.io/jskos/context.json"
         })
         res.json(results)
+      }
+    })
+})
+
+app.post("/mappings", (req, res) => {
+  mappingProvider.saveMapping(req, res)
+    .catch(err => res.send(err))
+    .then(result => {
+      if (!result) {
+        res.json({
+          ok: 0,
+          error: "mapping could not be saved"
+        })
+      } else {
+        res.json({
+          ok: 1,
+          mapping: result
+        })
       }
     })
 })
