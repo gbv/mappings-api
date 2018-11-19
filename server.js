@@ -54,6 +54,7 @@ db.then(db => {
 // Add default headers
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
   res.setHeader("Access-Control-Expose-Headers", "X-Total-Count, Link")
   res.setHeader("Content-Type", "application/json; charset=utf-8")
   next()
