@@ -41,8 +41,10 @@ download_import() {
   local OPT=$1
   shift
   local FILES=($@)
-  ## Remove all existing mappings/terminologies/concepts
-  npm run import -- -r -i $OPT
+  ## Remove all existing items except for mappings
+  [[ $OPT == "-m" ]] || npm run import -- -r $OPT
+  ## Rebuild indexes for all types
+  npm run import -- -i $OPT
   ## Download and import
   for FILE in ${FILES[@]}; do
     if [[ $FILE == \#* ]];

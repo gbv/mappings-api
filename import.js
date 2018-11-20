@@ -97,10 +97,6 @@ let promises = []
 if (cli.flags.remove) {
   for(let type of Object.keys(files)) {
     promises.push(clearCollection(type))
-    // Remove mappings if concordances are imported
-    if (type == "concordances" && !Object.keys(files).includes("mappings")) {
-      promises.push(clearCollection("mappings"))
-    }
   }
 }
 
