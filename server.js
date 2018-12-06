@@ -80,6 +80,26 @@ function cleanJSON(json) {
   }
 }
 
+function adjustSchemes(schemes) {
+  // Remove MongoDB specific fields, add JSKOS specific fields
+  schemes.forEach(scheme => {
+    delete scheme._id
+    scheme["@context"] = "https://gbv.github.io/jskos/context.json"
+    scheme.type = scheme.type || ["http://www.w3.org/2004/02/skos/core#ConceptScheme"]
+  })
+  return schemes
+}
+
+function adjustConcepts(concepts) {
+  // Remove MongoDB specific fields, add JSKOS specific fields
+  concepts.forEach(concept => {
+    delete concept._id
+    concept["@context"] = "https://gbv.github.io/jskos/context.json"
+    concept.type = concept.type || ["http://www.w3.org/2004/02/skos/core#Concept"]
+  })
+  return concepts
+}
+
 function handleDownload(req, res, results, filename) {
   /**
    * Transformation object to remove _id parameter from objects in a stream.
@@ -221,6 +241,7 @@ app.get("/mappings/suggest", (req, res) => {
 app.get("/mappings/voc", (req, res) => {
   mappingProvider.getMappingSchemes(req, res)
     .catch(err => res.send(err))
+    .then(adjustSchemes)
     .then(results => {
       res.json(results)
     })
@@ -229,12 +250,8 @@ app.get("/mappings/voc", (req, res) => {
 app.get("/voc", (req, res) => {
   terminologyProvider.getVocabularies(req, res)
     .catch(err => res.send(err))
+    .then(adjustSchemes)
     .then(results => {
-      // Remove MongoDB specific fields, add JSKOS specific fields
-      results.forEach(scheme => {
-        delete scheme._id
-        scheme["@context"] = "https://gbv.github.io/jskos/context.json"
-      })
       res.json(results)
     })
 })
@@ -242,12 +259,8 @@ app.get("/voc", (req, res) => {
 app.get("/data", (req, res) => {
   terminologyProvider.getDetails(req, res)
     .catch(err => res.send(err))
+    .then(adjustConcepts)
     .then(results => {
-      // Remove MongoDB specific fields, add JSKOS specific fields
-      results.forEach(concept => {
-        delete concept._id
-        concept["@context"] = "https://gbv.github.io/jskos/context.json"
-      })
       res.json(results)
     })
 })
@@ -255,12 +268,8 @@ app.get("/data", (req, res) => {
 app.get("/voc/top", (req, res) => {
   terminologyProvider.getTop(req, res)
     .catch(err => res.send(err))
+    .then(adjustConcepts)
     .then(results => {
-      // Remove MongoDB specific fields, add JSKOS specific fields
-      results.forEach(concept => {
-        delete concept._id
-        concept["@context"] = "https://gbv.github.io/jskos/context.json"
-      })
       res.json(results)
     })
 })
@@ -268,12 +277,8 @@ app.get("/voc/top", (req, res) => {
 app.get("/narrower", (req, res) => {
   terminologyProvider.getNarrower(req, res)
     .catch(err => res.send(err))
+    .then(adjustConcepts)
     .then(results => {
-      // Remove MongoDB specific fields, add JSKOS specific fields
-      results.forEach(concept => {
-        delete concept._id
-        concept["@context"] = "https://gbv.github.io/jskos/context.json"
-      })
       res.json(results)
     })
 })
@@ -281,12 +286,8 @@ app.get("/narrower", (req, res) => {
 app.get("/ancestors", (req, res) => {
   terminologyProvider.getAncestors(req, res)
     .catch(err => res.send(err))
+    .then(adjustConcepts)
     .then(results => {
-      // Remove MongoDB specific fields, add JSKOS specific fields
-      results.forEach(concept => {
-        delete concept._id
-        concept["@context"] = "https://gbv.github.io/jskos/context.json"
-      })
       res.json(results)
     })
 })
@@ -302,6 +303,7 @@ app.get("/suggest", (req, res) => {
 app.get("/search", (req, res) => {
   terminologyProvider.search(req, res)
     .catch(err => res.send(err))
+    .then(adjustConcepts)
     .then(results => {
       res.json(results)
     })
