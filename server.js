@@ -25,6 +25,9 @@ const portfinder = require("portfinder")
 const { Transform } = require("stream")
 const JSONStream = require("JSONStream")
 
+// Pretty-print JSON output
+app.set("json spaces", 2)
+
 // Promise for MongoDB db
 const db = mongo.connect(config.mongoUrl, config.mongoOptions).then(client => {
   return client.db(config.mongoDb)

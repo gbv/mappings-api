@@ -367,11 +367,11 @@ Lists all concept schemes used in mappings.
   ```
 
 ### /voc
-Lists all supported terminologies (concept schemes).
+Lists supported terminologies (concept schemes).
 
 * **URL Params**
 
-  None.
+  `uri=[uri]` URIs for concept schemes separated by `|`. If `uri` is not given, all supported concept schemes are returned.
 
 * **Success Response**
 
@@ -441,11 +441,11 @@ Lists top concepts for a concept scheme.
   ```
 
 ### /data
-Returns detailed data for concepts.
+Returns detailed data for concepts (or concept schemes).
 
 * **URL Params**
 
-  `uri=[uri]` URIs for concepts separated by `|`
+  `uri=[uri]` URIs for concepts (or concept schemes) separated by `|`
 
   `properties=[list]` with `[list]` being a comma-separated list of properties (currently supporting `ancestors` and `narrower`)
 
