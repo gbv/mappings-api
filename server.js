@@ -48,10 +48,11 @@ app.use(utils.addMiddlewareProperties)
 // Add routes
 
 // Root path for static page
-const path = require("path")
+// TODO: - Add structure and CSS?
+const readme = require("marked")(require("fs").readFileSync(require("path").join(__dirname + "/README.md")).toString())
 app.get("/", (req, res) => {
   res.setHeader("Content-Type", "text/html")
-  res.sendFile(path.join(__dirname + "/index.html"))
+  res.send(readme)
 })
 // JSON Schema for /status
 app.use("/status.schema.json", express.static(__dirname + "/status.schema.json"))
